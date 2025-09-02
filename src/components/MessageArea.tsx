@@ -15,7 +15,14 @@ const PremiumTypingAnimation = () => {
     );
 };
 
-const SearchStages = ({ searchInfo }) => {
+interface SearchInfo {
+    stages: string[];
+    query: string;
+    urls: string[];
+    error?: string;
+}
+
+const SearchStages = ({ searchInfo }: { searchInfo: SearchInfo }) => {
     if (!searchInfo || !searchInfo.stages || searchInfo.stages.length === 0) return null;
 
     return (
@@ -70,7 +77,7 @@ const SearchStages = ({ searchInfo }) => {
                                             ))
                                         ) : (
                                             <div className="bg-gray-100 text-xs px-3 py-1.5 rounded border border-gray-200 truncate max-w-[200px] transition-all duration-200 hover:bg-gray-50">
-                                                {typeof searchInfo.urls === 'string' ? searchInfo.urls.substring(0, 30) : JSON.stringify(searchInfo.urls).substring(0, 30)}
+                                                                                                {(searchInfo.urls as string[]).slice(0, 3).join(', ')}
                                             </div>
                                         )}
                                     </div>
@@ -105,11 +112,20 @@ const SearchStages = ({ searchInfo }) => {
     );
 };
 
-const MessageArea = ({ messages }) => {
+interface Message {
+    id: number;
+    content: string;
+    isUser: boolean;
+    type: string;
+    isLoading?: boolean;
+    searchInfo?: SearchInfo;
+}
+
+const MessageArea = ({ messages }: { messages: Message[] }) => {
     return (
         <div className="flex-grow overflow-y-auto bg-[#FCFCF8] border-b border-gray-100" style={{ minHeight: 0 }}>
             <div className="max-w-4xl mx-auto p-6">
-                {messages.map((message) => (
+                {messages.map((message: Message) => (
                     <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} mb-5`}>
                         <div className="flex flex-col max-w-md">
                             {/* Search Status Display - Now ABOVE the message */}
